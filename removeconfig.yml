@@ -1,9 +1,11 @@
-   ---
-   - name: remove config
-     hosts: ctaas  # Replace with your Ansible inventory group
-     become: true         # Requires root/privileged access on the device
-     tasks:
-       - name: Erase the running configuration
-         cisco.ios.ios_config:
-           state: absent
-           reload: no
+---
+- name: remove config
+  hosts: ctaas  # Replace with your Ansible inventory group
+  become: true         # Requires root/privileged access on the device
+  tasks:
+   - name: Erase the running configuration
+     ios_command:
+       commands:
+         - command: wr er
+           prompt: confirm
+           answer: confirm
