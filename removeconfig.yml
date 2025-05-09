@@ -1,9 +1,14 @@
 ---
-- name: reboot ios device
-  cli_command:
-    command: wr er
-    prompt:
-      - Continue?
-      - confirm
-    answer:
-     - confirm
+- name: clear ios device
+  hosts: ctaas
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: erase config
+      cli_command:
+        command: wr er
+        prompt:
+          - Continue?
+          - confirm
+        answer:
+          - confirm
