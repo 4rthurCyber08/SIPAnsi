@@ -1,0 +1,80 @@
+---
+
+# Monitor Number  = 32
+# Mobile Phone 1 Mac: 1111.1111.1111
+# Mobile Phone 2 Mac: 2222.2222.2222
+
+- name: "Session Initiation Protocol"
+  hosts: cucm
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: "Allow SIP Connections"
+      ios_command: 
+        commands: 
+          - conf t
+          - voice service voip
+          - allow-connections h323 to sip
+          - allow-connections sip to h323
+          - allow-connections sip to sip
+          - supplementary-service h450.12
+          - sip
+          - bind control source-interface fa0/0
+          - bind media source-interface fa0/0
+          - registrar server expires max 600 min 60
+          - end
+      tags: 
+        - allowsip
+      
+
+    - name: "Assign SIP Domain"
+      ios_command:
+        commands:
+          - config t
+          - voice register global
+          - mode cme
+          - "source-address 10.32.100.8 port 5060"
+          - max-dn 12
+          - max-pool 12
+          - authenticate register
+          - create profile
+          - end
+      tags:
+        - sipdomain
+      
+
+    - name: "Create Directory Numbers"
+      ios_command:
+        commands: 
+          - config t
+          - voice register dn 1
+          - "number 3234"
+          - allow watch
+          - "name 3234"
+          - voice register dn 2
+          - "number 3243"
+          - allow watch
+          - "name 3243"
+          - end
+      tags:
+        - sipdn
+    
+    - name: "Register Accounts"
+      ios_command:
+        commands: 
+          - config t
+          - voice register pool 1
+          - "id mac 1111.1111.1111"
+          - number 1 dn 1
+          - dtmf-relay sip-notify
+          - "username 3234 password 3234"
+          - codec g711ulaw
+          - voice register pool 2
+          - "id mac 2222.2222.2222"
+          - number 1 dn 2
+          - dtmf-relay sip-notify
+          - "username 3243 password 3243"
+          - codec g711ulaw
+          - end
+      tags:
+        - register
