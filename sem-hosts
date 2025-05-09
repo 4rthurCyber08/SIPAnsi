@@ -6,3 +6,12 @@ ansible_user=admin
 ansible_password=C1sc0123
 ansible_connection=network_cli
 ansible_network_os=ios
+
+[cucm]
+10.32.100.8
+
+[cucm:vars]
+ansible_user=admin
+ansible_password=C1sc0123
+ansible_connection=network_cli
+ansible_network_os=ios
