@@ -1,0 +1,9 @@
+---
+- name: reboot ios device
+  cli_command:
+    command: wr er
+    prompt:
+      - Continue?
+      - confirm
+    answer:
+     - confirm
