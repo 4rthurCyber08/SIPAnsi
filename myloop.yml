@@ -1,0 +1,15 @@
+---
+- name: AddCTAAS
+  hosts: coretaas
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Addloop
+      ios_command:
+        commands:
+          - conf t
+          - int lo 100
+          - ip add 100.10.10.100 255.255.255.255
+          - end
+      tags:
+        - loop
